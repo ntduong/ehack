@@ -32,7 +32,7 @@ function loadCallBack(data) {
 
 // For the synonym/antonym demo, use test data load from server
 window.onload = function(){
-    loadDataFromServer("http://127.0.0.1:9002/load", loadCallBack);
+    loadDataFromServer("http://127.0.0.1:8888/load", loadCallBack);
 };
 
 // Add w to map, i.e. map[w]++
@@ -197,10 +197,10 @@ function makeGraph(word) {
         note.push("It's me: " + d.name);
       }
       if(antonyms.hasOwnProperty(word) && antonyms[word].includes(d.name)) {
-        note.push(d.name + "hates" + word);
+        note.push(d.name + " hates " + word);
       }
       if(synonyms.hasOwnProperty(word) && synonyms[word].includes(d.name)) {
-        note.push(d.name + "loves" + word);
+        note.push(d.name + " loves " + word);
       }
       d3.select("#tooltip")
         .style("left", xPos+"px")
@@ -249,15 +249,17 @@ function addCollocation() {
   synonym = norm(synonym);
   
   addWord(word, words);
-  if(antonym !== "") addWord(antonym, words);
-  if (synonym !== "") addWord(synonym, words);
   // avoid duplicate links
   // TODO(d): Alternatively, consider use link frequency as edge width?
-  if (antonym !== "" && (!antonyms.hasOwnProperty(word) || !antonyms[word].includes(antonym))) {
-    addToList(word, antonym, antonyms);
+  if(antonym !== "") {
+      addWord(antonym, words);
+      if(!antonyms.hasOwnProperty(word) || !antonym[word].includes(antonym)) addToList(word, antonym, antonyms);
+      if(!antonyms.hasOwnProperty(antonym) || !antonyms[antonym].includes(word)) addToList(antonym, word, antonyms);
   }
-  if (synonym !== "" && (!synonyms.hasOwnProperty(word) || !synonyms[word].includes(synonym))) {
-    addToList(word, synonym, synonyms);
+  if (synonym !== "") {
+      addWord(synonym, words);
+      if (!synonyms.hasOwnProperty(word) || !synonyms[word].includes(synonym)) addToList(word, synonym, synonyms);
+      if (!synonyms.hasOwnProperty(synonym) || !synonyms[synonym].includes(word)) addToList(synonym, word, synonyms);
   }
 }
 
@@ -286,5 +288,5 @@ function saveCallBack(req) {
 // saveHandler is called when user pushes the "Save" button
 function saveHandler() {
   data = {"words": words, "antonyms": antonyms, "synonyms": synonyms};
-  saveDataToServer("http://127.0.0.1:9002/save", data, saveCallBack);
+  saveDataToServer("http://127.0.0.1:8888/save", data, saveCallBack);
 }

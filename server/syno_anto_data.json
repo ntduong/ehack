@@ -1,1 +1,1 @@
-{"words":[{"big":5},{"small":3}],"antonyms":{"big":["small","tiny"]},"synonyms":{"big":["gigantic","huge","fat"]}}
+{"words":{"big":6,"small":3,"tiny":2,"huge":1},"antonyms":{"big":["small","tiny"],"small":["big"],"huge":["tiny"],"tiny":["huge"]},"synonyms":{"small":["tiny"],"tiny":["small"],"huge":["big"],"big":["huge"]}}
