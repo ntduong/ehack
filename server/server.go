@@ -29,13 +29,6 @@ func saveHandler(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatalf("failed to read request body: %v", err)
 	}
-	/*
-		var vocabData data
-		if err = json.Unmarshal(body, &vocabData); err != nil {
-			log.Fatalf("failed to parse body: %v", err)
-		}
-	*/
-
 	// Make it super simple: just save data to file on disk,
 	// instead of writing to some database (extension, maybe?)
 	ioutil.WriteFile(dataFile, body, os.FileMode(0777))

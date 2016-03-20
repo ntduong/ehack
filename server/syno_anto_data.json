@@ -1,1 +1,1 @@
-{"words":{"big":6,"small":3,"tiny":2,"huge":1},"antonyms":{"big":["small","tiny"],"small":["big"],"huge":["tiny"],"tiny":["huge"]},"synonyms":{"small":["tiny"],"tiny":["small"],"huge":["big"],"big":["huge"]}}
+{"words":{"hack":10,"fun":10,"boring":5},"antonyms":{"hack":["boring"],"fun":["boring"],"boring":["fun","hack"]},"synonyms":{"hack":["fun"],"fun":["hack"]}}

@@ -58,9 +58,9 @@ function addToList(key, value, map) {
 function showOne() {
   var w = document.getElementById("search").value;
   w = w.toLowerCase().trim();
-  console.log(w);
-  console.log(words.hasOwnProperty(w));
-  console.log(words);
+  //console.log(w);
+  //console.log(words.hasOwnProperty(w));
+  //console.log(words);
   // clear old answer if any
   d3.selectAll(".answer").remove();
   d3.select("#tooltip").classed("hidden", true);
@@ -68,9 +68,9 @@ function showOne() {
     d3.select("body").append("div")
       .attr("class", "answer")
       .text("You don't have any note for " + "\"" + w + "\" yet!");
-      console.log("no-op");
+      //console.log("no-op");
   } else {
-    console.log("makegraph");
+    //console.log("makegraph");
     makeGraph(w);
   }
 }
@@ -81,6 +81,15 @@ function showSelected(word) {
   d3.select(".answer").remove();
   d3.select("#tooltip").classed("hidden", true);
   makeGraph(word);
+}
+
+var MAXNODESIZE = 7;
+var ANTODIST = 200;
+var SYNODIST = 100;
+
+function stripImageName(name) {
+    if (name.startsWith("images/")) return "THIS";
+    return name;
 }
 
 function makeGraph(word) {
@@ -95,7 +104,7 @@ function makeGraph(word) {
 
   var force = d3.layout.force()
     //.charge(-80)
-    .linkDistance(200)
+    //.linkDistance(200)
     .size([W, H]);
 
   var gNodeData = [{name: word, freq: words[word]}];
@@ -117,9 +126,13 @@ function makeGraph(word) {
   // data binding
   force.nodes(gNodeData)
        .charge(function(d){
-          return d.freq * d.freq * -10;
+          return d.freq * d.freq * -2.0;
        })
        .links(gLinkData)
+       .linkDistance(function(d) {
+	   if(d.after) return ANTODIST;
+	   else return SYNODIST;
+       })
        .start();
 
   var links = svg.selectAll(".link")
@@ -133,7 +146,7 @@ function makeGraph(word) {
       }
       return "blue"; // synonym BLUE 
     })
-    .style("stroke-width", 2);
+    .style("stroke-width", 3);
 
   var colors = d3.scale.category20();
   var nodes = svg.selectAll(".node")
@@ -147,7 +160,7 @@ function makeGraph(word) {
     .attr("class", "node")
     .attr("r", function(d){ 
 	if(!d.name.startsWith("images/")) 
-	    return d.freq; 
+	    return Math.max(MAXNODESIZE, d.freq); 
 	return 0;
     })
     .style("fill", function(d){ return colors(d.freq); })
@@ -161,12 +174,34 @@ function makeGraph(word) {
     	console.log(d.name);
     	return d.name;
     })
-    .attr("width", 50)
-    .attr("height", 50)
+    .attr("width", 100)
+    .attr("height", 100)
     .on("click", function(d) {
       // don't create a new graph when click on the root word
       if(d.name === word) return;
       showSelected(d.name);
+    }).on("mouseover", function(){
+	var xPos = d.x;
+	var yPos = d.y;
+	var note = [];
+	if(d.name === word) {
+            note.push(stripImageName(d.name));
+	}	
+	if(antonyms.hasOwnProperty(word) && antonyms[word].includes(d.name)) {
+            note.push(stripImageName(d.name) + " IS NOT " + stripImageName(word));
+	}
+	if(synonyms.hasOwnProperty(word) && synonyms[word].includes(d.name)) {
+            note.push(stripImageName(d.name) + " IS " + stripImageName(word));
+	}
+	d3.select("#tooltip")
+            .style("left", xPos+"px")
+            .style("top", yPos+"px")
+            .select("#story")
+            .text(note.join("\n"));
+	// Show the tooltip
+	d3.select("#tooltip").classed("hidden", false);
+    }).on("mouseout", function(){
+      d3.select("#tooltip").classed("hidden", true);
     })
     .call(force.drag);
 
@@ -194,13 +229,14 @@ function makeGraph(word) {
       var yPos = d.y;
       var note = [];
       if(d.name === word) {
-        note.push("It's me: " + d.name);
+        note.push(d.name);
       }
+      
       if(antonyms.hasOwnProperty(word) && antonyms[word].includes(d.name)) {
-        note.push(d.name + " hates " + word);
+        note.push(stripImageName(d.name) + " IS NOT " + stripImageName(word));
       }
       if(synonyms.hasOwnProperty(word) && synonyms[word].includes(d.name)) {
-        note.push(d.name + " loves " + word);
+        note.push(stripImageName(d.name) + " IS " + stripImageName(word));
       }
       d3.select("#tooltip")
         .style("left", xPos+"px")
@@ -253,7 +289,7 @@ function addCollocation() {
   // TODO(d): Alternatively, consider use link frequency as edge width?
   if(antonym !== "") {
       addWord(antonym, words);
-      if(!antonyms.hasOwnProperty(word) || !antonym[word].includes(antonym)) addToList(word, antonym, antonyms);
+      if(!antonyms.hasOwnProperty(word) || !antonyms[word].includes(antonym)) addToList(word, antonym, antonyms);
       if(!antonyms.hasOwnProperty(antonym) || !antonyms[antonym].includes(word)) addToList(antonym, word, antonyms);
   }
   if (synonym !== "") {
@@ -261,6 +297,10 @@ function addCollocation() {
       if (!synonyms.hasOwnProperty(word) || !synonyms[word].includes(synonym)) addToList(word, synonym, synonyms);
       if (!synonyms.hasOwnProperty(synonym) || !synonyms[synonym].includes(word)) addToList(synonym, word, synonyms);
   }
+
+  document.getElementById("word").value = "";
+  document.getElementById("antonym").value = "";
+  document.getElementById("synonym").value = "";
 }
 
 // TODO(d): Use window.setInterval to save data to server periodically in
