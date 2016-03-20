@@ -58,6 +58,9 @@ function addToList(key, value, map) {
 function showOne() {
   var w = document.getElementById("search").value;
   w = w.toLowerCase().trim();
+  console.log(w);
+  console.log(words.hasOwnProperty(w));
+  console.log(words);
   // clear old answer if any
   d3.selectAll(".answer").remove();
   d3.select("#tooltip").classed("hidden", true);
@@ -65,7 +68,9 @@ function showOne() {
     d3.select("body").append("div")
       .attr("class", "answer")
       .text("You don't have any note for " + "\"" + w + "\" yet!");
+      console.log("no-op");
   } else {
+    console.log("makegraph");
     makeGraph(w);
   }
 }
