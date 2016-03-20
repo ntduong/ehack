@@ -32,7 +32,7 @@ function loadCallBack(data) {
 
 // For the synonym/antonym demo, use test data load from server
 window.onload = function(){
-    loadDataFromServer("http://127.0.0.1:9000/load", loadCallBack);
+    loadDataFromServer("http://127.0.0.1:9002/load", loadCallBack);
 };
 
 // Add w to map, i.e. map[w]++
@@ -281,5 +281,5 @@ function saveCallBack(req) {
 // saveHandler is called when user pushes the "Save" button
 function saveHandler() {
   data = {"words": words, "antonyms": antonyms, "synonyms": synonyms};
-  saveDataToServer("http://127.0.0.1:9000/save", data, saveCallBack);
+  saveDataToServer("http://127.0.0.1:9002/save", data, saveCallBack);
 }

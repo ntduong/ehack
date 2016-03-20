@@ -45,5 +45,6 @@ func main() {
 	http.HandleFunc("/save", saveHandler)
 	http.HandleFunc("/load", loadHandler)
 	http.Handle("/", http.FileServer(http.Dir("/home/duong/prog/havefun/ehack/")))
-	log.Fatal(http.ListenAndServe(":9000", nil))
+	// Use port 9002 for syno-antonym demo
+	log.Fatal(http.ListenAndServe(":9002", nil))
 }
