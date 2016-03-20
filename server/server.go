@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const dataFile = "saved_data.json"
+const dataFile = "syno_anto_data.json"
 
 func loadHandler(w http.ResponseWriter, req *http.Request) {
 	file, err := os.Open(dataFile)
@@ -21,12 +21,6 @@ func loadHandler(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprint(w, string(content))
-}
-
-type data struct {
-	Words      map[string]int      `json:"words,omitempty"`
-	ComeBefore map[string][]string `json:"comeBefore,omitempty"`
-	ComeAfter  map[string][]string `json:"comeAfter,omitempty"`
 }
 
 func saveHandler(w http.ResponseWriter, req *http.Request) {

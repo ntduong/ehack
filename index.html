@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Your personal map</title>
+  <title>Hate it or Love it</title>
 
   <script type="text/javascript" src="lib/d3.v3.min.js"></script>
 
@@ -10,7 +10,7 @@
   <script type="text/javascript" src="lib/jquery-ui-1.11.4/jquery-ui.min.js"></script>
   <script type="text/javascript" src="imap.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="lib/jquery-ui.css">
+  <!--link rel="stylesheet" type="text/css" href="lib/jquery-ui.css"-->
   <link rel="stylesheet" type="text/css" href="my.css">
 </head>
 <body>
@@ -19,10 +19,10 @@
   <input type="button" value="Show" onclick="showOne()"/><br>
 -->
   <div class="ui-widget">
-    <button type="button" onclick="addCollocation()">Connect</button>
-    <input type="text" id="first" placeholder="a word" />
-    <label>with</label>
-    <input type="text" id="second" placeholder="your note about it" />
+    <button type="button" onclick="addCollocation()">Add</button>
+    <input type="text" id="word" placeholder="a word" />
+    <input type="text" id="synonym" placeholder="synonym" />
+    <input type="text" id="antonym" placeholder="antonym" />
   </div>
   <br />
   <div class="ui-widget">
@@ -31,7 +31,7 @@
   </div>
   <br />
   <div class="ui-widget">
-    <button type="button" onclick="saveHandler()">Done</button>
+    <button type="button" onclick="saveHandler()">Save</button>
   </div>
   <div id="tooltip" class="hidden">
     <p><strong>Personal story</strong></p>
